@@ -47,6 +47,203 @@
             <div class="col-md-12" id="left-hero">
                 <h1 class="hero-tag contact-hero  fadeInLeft">Project X</h1>
                 <p class="hero-des contact-des  fadeIn delay-1s">Description project X
+                    
+                   Devices + LoraWan + TheThingsNetwork
+ 
+1.	Parts
+
+Hardware Requirements:
+•	ATOM-LITE-ESP32-DEVELOPMENT-KIT - https://shop.m5stack.com/products/atom-lite-esp32-development-kit
+•	LoRaWAN UNIT 868MHz (ASR6501) with Antenna -https://shop.m5stack.com/products/lorawan-unit-868mhz-asr6501-with-antenna
+•	Proximity to a TTN Gateway – check influence area - https://ttnmapper.org/heatmap/
+
+Software Requirements:
+•	TTN Account - https://www.thethingsnetwork.org/
+•	M5Burner - https://shop.m5stack.com/pages/download
+•	uPyLoader - https://github.com/BetaRavener/uPyLoader/releases
+
+2.	Architecture
+
+
+ 
+
+Notes
+•	The current setup uses  the CML IoT LoRaWAN Network Gateways
+•	The Things Network uses different frequency plans in different regions of the world. Make sure that the correct version of LoRaWAN devices for Europe the frequency is 868 MHz.
+
+
+3.	TheThingsNetwork Setup 
+I.	TTN New user
+Register as individual user – account is free and must be verified.
+ 
+
+II.	TTN New Application – to collect devices data
+Navigate to console.
+ 
+
+Select Europe Network Cluster
+ 
+
+Select “+Add Application” in Applications Menu.
+ 
+
+
+
+Complete Application Fields and select ‘Create Application’.
+ 
+
+III.	TTN New End Device
+Under the new Application, select option ‘End Devices’ > ‘Add end device’.
+ 
+
+Select ‘Manually’ registration, and the following parametrization.
+ 
+ 
+Select Activation Mode ‘OTAA’, ‘Class C device’ and ‘Use network's default MAC settings’.
+ 
+
+Select Options: Generate DevEUI, Fill JoinEUI with zeros, Generate AppKey ans Generate NwkKey. Select ‘Register end device’.
+ 
+
+4.	ATOM Lite Setup
+
+ 
+Erase 
+py -m esptool --port com8 -baud 115200 –after no_reset read_mac
+flash
+py -m esptool --chip esp32 write_flash -z 0x1000 esp32-idf3-20210202-v1.14.bin 
+ampy –-port COM8 put lib
+ampy –-port COM8 put main.py
+
+ 
+I.	Erase ATOM Lite
+a.	Install M5Burner software
+b.	Connect ATOM Lite device to PC
+c.	Find which COM port is used by device
+d.	Select COM port and ‘Erase’
+  
+ 
+II.	Burn ATOM Lite
+a.	Reset ATOM Lite device
+b.	Select COM port, ATOM device, UIFLOW(LITE) > ‘Burn’
+ 
+ 
+c.	Reset ATOM Lite device
+
+III.	Download & Install Libraries
+a.	Install uPyLoader
+b.	Download Libraries cooperative_multitasking.py, lora_states.py and asr6501.py
+c.	Connect uPyLoader to COM port > Select files > Transfer files
+ 
+
+IV.	Update & Download main.py 
+a.	Replace DevEUI, JoinEUI and AppKey with new end device Activation Information
+ 
+b.	Transfer main.py
+c.	Restart device
+
+5.	Main.py Code
+
+from cooperative_multitasking import Tasks
+from machine import UART
+from lora_states import NOT_JOINED, JOINING, JOINED, SENDING, SENT, RETRY
+from asr6501 import ASR6501
+
+tasks = Tasks()
+uart2 = UART(2, tx=26, rx=32)
+uart2.init(baudrate=115200, bits=8, parity=None, stop=1, txbuf=256, rxbuf=256)
+modem = ASR6501(uart2, '70B3D57ED005295F', '0000000000000000', '502F6EDD15D667D30D86F5FD5078F5B6')  # DevEUI, AppEUI, AppKey as hex codes
+count = 0
+
+def modem_state_changed():
+    return modem.has_state_changed()
+
+def start_join():
+    yellow()
+    modem.send_join()
+    tasks.when_then(modem_state_changed, end_join)
+    
+def end_join():
+    state = modem.get_state()
+    if state == JOINING:
+        tasks.when_then(modem_state_changed, end_join)
+    elif state == JOINED:
+        green()
+        tasks.after(10000, start_send)
+    elif state == NOT_JOINED:
+        tasks.after(60000, start_join)
+    else:
+        raise NotImplementedError()
+    
+def start_send():
+    global count
+    count += 1
+    blue()
+    modem.send_message(bytes(bin(count), 'ASCII'), count % 29 == 1)  # message, confirmed
+    tasks.when_then(modem_state_changed, end_send)
+
+def end_send():
+    state = modem.get_state()
+    if state == SENDING:
+        tasks.only_one_of(tasks.when_then(modem_state_changed, end_send), tasks.after(60000, assume_sent))  # workaround for AT+DTRX response lines
+    elif state == SENT:
+        magenta()
+        tasks.after(300000, start_send)
+    elif state == RETRY:
+        red()
+        tasks.after(300000, start_send)
+    elif state == NOT_JOINED:
+        red()
+        tasks.after(300000, start_join)
+    else:
+        raise NotImplementedError()
+
+def assume_sent():
+    magenta()
+    tasks.after(240000, start_send)
+
+
+from machine import Pin
+from neopixel import NeoPixel
+
+gpio27 = Pin(27, Pin.OUT)
+neopixels = NeoPixel(gpio27, 1)
+
+def yellow():
+    neopixels[0] = (20, 20, 0)
+    neopixels.write()
+
+def green():
+    neopixels[0] = (0, 25, 0)
+    neopixels.write()
+
+def blue():
+    neopixels[0] = (0, 0, 25)
+    neopixels.write()
+
+def magenta():
+    neopixels[0] = (20, 0, 20)
+    neopixels.write()
+
+def red():
+    neopixels[0] = (25, 0, 0)
+    neopixels.write()
+
+
+tasks.now(start_join)
+
+while tasks.available():
+    tasks.run()
+    
+
+6.	Results
+
+
+ 
+ 
+ 
+
+                    
                 </p>
                 <!-- <div class="feedback"><a href="https://d474b570.nolt.io/">Have any feedback or suggestion?</a></div> -->
             </div>
