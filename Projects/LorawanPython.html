@@ -51,7 +51,7 @@
                    Devices + LoraWan + TheThingsNetwork
 <p 
 1.	Parts
-
+</p>
 Hardware Requirements:
 •	ATOM-LITE-ESP32-DEVELOPMENT-KIT - https://shop.m5stack.com/products/atom-lite-esp32-development-kit
 •	LoRaWAN UNIT 868MHz (ASR6501) with Antenna -https://shop.m5stack.com/products/lorawan-unit-868mhz-asr6501-with-antenna
@@ -60,9 +60,9 @@ Hardware Requirements:
 Software Requirements:
 •	TTN Account - https://www.thethingsnetwork.org/
 •	M5Burner - https://shop.m5stack.com/pages/download
-•	uPyLoader - https://github.com/BetaRavener/uPyLoader/releases
+•	uPyLoader - https://github.com/BetaRavener/uPyLoader/releases</p>
 <p 
-2.	Architecture
+2.	Architecture</p>
 
 
  
@@ -70,42 +70,42 @@ Software Requirements:
 Notes
 •	The current setup uses  the CML IoT LoRaWAN Network Gateways
 •	The Things Network uses different frequency plans in different regions of the world. Make sure that the correct version of LoRaWAN devices for Europe the frequency is 868 MHz.
-
+</p>
 <p 
 3.	TheThingsNetwork Setup 
 I.	TTN New user
-Register as individual user – account is free and must be verified.
+Register as individual user – account is free and must be verified.</p>
  
 <p 
-II.	TTN New Application – to collect devices data
+II.	TTN New Application – to collect devices data</p>
 Navigate to console.
  
 <p 
-Select Europe Network Cluster
+Select Europe Network Cluster</p>
  
 <p 
-Select “+Add Application” in Applications Menu.
+Select “+Add Application” in Applications Menu.</p>
  
 
 
 <p 
-Complete Application Fields and select ‘Create Application’.
+Complete Application Fields and select ‘Create Application’.</p>
  
 <p 
-III.	TTN New End Device
+III.	TTN New End Device</p>
 Under the new Application, select option ‘End Devices’ > ‘Add end device’.
  
 <p 
-Select ‘Manually’ registration, and the following parametrization.
+Select ‘Manually’ registration, and the following parametrization.</p>
  
 <p 
-Select Activation Mode ‘OTAA’, ‘Class C device’ and ‘Use network's default MAC settings’.
+Select Activation Mode ‘OTAA’, ‘Class C device’ and ‘Use network's default MAC settings’.</p>
  
 <p 
-Select Options: Generate DevEUI, Fill JoinEUI with zeros, Generate AppKey ans Generate NwkKey. Select ‘Register end device’.
+Select Options: Generate DevEUI, Fill JoinEUI with zeros, Generate AppKey ans Generate NwkKey. Select ‘Register end device’.</p>
  
 <p 
-4.	ATOM Lite Setup
+4.	ATOM Lite Setup</p>
 
  <p 
 Erase 
@@ -113,43 +113,43 @@ py -m esptool --port com8 -baud 115200 –after no_reset read_mac
 flash
 py -m esptool --chip esp32 write_flash -z 0x1000 esp32-idf3-20210202-v1.14.bin 
 ampy –-port COM8 put lib
-ampy –-port COM8 put main.py
+ampy –-port COM8 put main.py</p>
 
 <p  
 I.	Erase ATOM Lite
 a.	Install M5Burner software
 b.	Connect ATOM Lite device to PC
 c.	Find which COM port is used by device
-d.	Select COM port and ‘Erase’
+d.	Select COM port and ‘Erase’</p>
   
 <p  
 II.	Burn ATOM Lite
 a.	Reset ATOM Lite device
-b.	Select COM port, ATOM device, UIFLOW(LITE) > ‘Burn’
+b.	Select COM port, ATOM device, UIFLOW(LITE) > ‘Burn’</p>
  
 <p  
-c.	Reset ATOM Lite device
+c.	Reset ATOM Lite device</p>
 <p 
-III.	Download & Install Libraries
+III.	Download & Install Libraries</p>
 a.	Install uPyLoader
 b.	Download Libraries cooperative_multitasking.py, lora_states.py and asr6501.py
 c.	Connect uPyLoader to COM port > Select files > Transfer files
  
 <p 
-IV.	Update & Download main.py
+IV.	Update & Download main.py</p>
    <p 
-a.	Replace DevEUI, JoinEUI and AppKey with new end device Activation Information
+a.	Replace DevEUI, JoinEUI and AppKey with new end device Activation Information</p>
 <p 
 b.	Transfer main.py
-c.	Restart device
+c.	Restart device</p>
 <p 
-5.	Main.py Code
+5.	Main.py Code</p>
 <p 
 from cooperative_multitasking import Tasks
 from machine import UART
 from lora_states import NOT_JOINED, JOINING, JOINED, SENDING, SENT, RETRY
 from asr6501 import ASR6501
-<p 
+
 tasks = Tasks()
 uart2 = UART(2, tx=26, rx=32)
 uart2.init(baudrate=115200, bits=8, parity=None, stop=1, txbuf=256, rxbuf=256)
@@ -237,7 +237,7 @@ while tasks.available():
     tasks.run()
     
 <p 
-6.	Results
+6.	Results</p>
 
 
  
