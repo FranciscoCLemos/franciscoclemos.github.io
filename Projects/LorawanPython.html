@@ -49,63 +49,35 @@
                 <p class="hero-des contact-des  fadeIn delay-1s">Description project X
                     
                    Devices + LoraWan + TheThingsNetwork
-<p 
-1.	Parts
-</p>
-Hardware Requirements:
-•	ATOM-LITE-ESP32-DEVELOPMENT-KIT - https://shop.m5stack.com/products/atom-lite-esp32-development-kit
-•	LoRaWAN UNIT 868MHz (ASR6501) with Antenna -https://shop.m5stack.com/products/lorawan-unit-868mhz-asr6501-with-antenna
-•	Proximity to a TTN Gateway – check influence area - https://ttnmapper.org/heatmap/
-<p 
-Software Requirements:
-•	TTN Account - https://www.thethingsnetwork.org/
-•	M5Burner - https://shop.m5stack.com/pages/download
-•	uPyLoader - https://github.com/BetaRavener/uPyLoader/releases</p>
-<p 
-2.	Architecture</p>
+<h2> 1.	Parts </h2>
+<p Hardware Requirements:</p>
+<p•	ATOM-LITE-ESP32-DEVELOPMENT-KIT - https://shop.m5stack.com/products/atom-lite-esp32-development-kit</p>
+<p•	LoRaWAN UNIT 868MHz (ASR6501) with Antenna -https://shop.m5stack.com/products/lorawan-unit-868mhz-asr6501-with-antenna</p>
+<p•	Proximity to a TTN Gateway – check influence area - https://ttnmapper.org/heatmap/</p>
+<p Software Requirements:</p>
+<p•	TTN Account - https://www.thethingsnetwork.org/</p>
+<p•	M5Burner - https://shop.m5stack.com/pages/download</p>
+<p•	uPyLoader - https://github.com/BetaRavener/uPyLoader/releases</p>
+<p 2.	Architecture</p>
+<h5> Notes </h5>
+<p •	The current setup uses  the CML IoT LoRaWAN Network Gateways</p>
+<p •	The Things Network uses different frequency plans in different regions of the world. Make sure that the correct version of LoRaWAN devices for Europe the frequency is 868 MHz.</p>
 
-
+<h2>3.	TheThingsNetwork Setup </h2>
+<h4>I.	TTN New user</h4>
+<p Register as individual user – account is free and must be verified.</p>
+<h4>II.	TTN New Application – to collect devices data</h4>
+<p Navigate to console.</p>
+<p Select Europe Network Cluster</p>
+<p Select “+Add Application” in Applications Menu.</p>
+<p Complete Application Fields and select ‘Create Application’.</p>
+<h4>III.	TTN New End Device</h4>
+<pUnder the new Application, select option ‘End Devices’ > ‘Add end device’.</p>
+<p Select ‘Manually’ registration, and the following parametrization.</p>
+<p Select Activation Mode ‘OTAA’, ‘Class C device’ and ‘Use network's default MAC settings’.</p>
+<p Select Options: Generate DevEUI, Fill JoinEUI with zeros, Generate AppKey ans Generate NwkKey. Select ‘Register end device’.</p>
  
-<p 
-Notes
-•	The current setup uses  the CML IoT LoRaWAN Network Gateways
-•	The Things Network uses different frequency plans in different regions of the world. Make sure that the correct version of LoRaWAN devices for Europe the frequency is 868 MHz.
-</p>
-<p 
-3.	TheThingsNetwork Setup 
-I.	TTN New user
-Register as individual user – account is free and must be verified.</p>
- 
-<p 
-II.	TTN New Application – to collect devices data</p>
-Navigate to console.
- 
-<p 
-Select Europe Network Cluster</p>
- 
-<p 
-Select “+Add Application” in Applications Menu.</p>
- 
-
-
-<p 
-Complete Application Fields and select ‘Create Application’.</p>
- 
-<p 
-III.	TTN New End Device</p>
-Under the new Application, select option ‘End Devices’ > ‘Add end device’.
- 
-<p 
-Select ‘Manually’ registration, and the following parametrization.</p>
- 
-<p 
-Select Activation Mode ‘OTAA’, ‘Class C device’ and ‘Use network's default MAC settings’.</p>
- 
-<p 
-Select Options: Generate DevEUI, Fill JoinEUI with zeros, Generate AppKey ans Generate NwkKey. Select ‘Register end device’.</p>
- 
-<p 
-4.	ATOM Lite Setup</p>
+<h2>4.	ATOM Lite Setup</h2>
 
  <p 
 Erase 
