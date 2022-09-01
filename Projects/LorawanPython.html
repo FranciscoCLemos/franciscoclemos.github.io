@@ -49,65 +49,65 @@
                 <p class="hero-des contact-des  fadeIn delay-1s">Description project X
                     
                    Devices + LoraWan + TheThingsNetwork
- 
+<p 
 1.	Parts
 
 Hardware Requirements:
 •	ATOM-LITE-ESP32-DEVELOPMENT-KIT - https://shop.m5stack.com/products/atom-lite-esp32-development-kit
 •	LoRaWAN UNIT 868MHz (ASR6501) with Antenna -https://shop.m5stack.com/products/lorawan-unit-868mhz-asr6501-with-antenna
 •	Proximity to a TTN Gateway – check influence area - https://ttnmapper.org/heatmap/
-
+<p 
 Software Requirements:
 •	TTN Account - https://www.thethingsnetwork.org/
 •	M5Burner - https://shop.m5stack.com/pages/download
 •	uPyLoader - https://github.com/BetaRavener/uPyLoader/releases
-
+<p 
 2.	Architecture
 
 
  
-
+<p 
 Notes
 •	The current setup uses  the CML IoT LoRaWAN Network Gateways
 •	The Things Network uses different frequency plans in different regions of the world. Make sure that the correct version of LoRaWAN devices for Europe the frequency is 868 MHz.
 
-
+<p 
 3.	TheThingsNetwork Setup 
 I.	TTN New user
 Register as individual user – account is free and must be verified.
  
-
+<p 
 II.	TTN New Application – to collect devices data
 Navigate to console.
  
-
+<p 
 Select Europe Network Cluster
  
-
+<p 
 Select “+Add Application” in Applications Menu.
  
 
 
-
+<p 
 Complete Application Fields and select ‘Create Application’.
  
-
+<p 
 III.	TTN New End Device
 Under the new Application, select option ‘End Devices’ > ‘Add end device’.
  
-
+<p 
 Select ‘Manually’ registration, and the following parametrization.
  
- 
+<p 
 Select Activation Mode ‘OTAA’, ‘Class C device’ and ‘Use network's default MAC settings’.
  
-
+<p 
 Select Options: Generate DevEUI, Fill JoinEUI with zeros, Generate AppKey ans Generate NwkKey. Select ‘Register end device’.
  
-
+<p 
 4.	ATOM Lite Setup
 
- 
+ <p 
 Erase 
 py -m esptool --port com8 -baud 115200 –after no_reset read_mac
 flash
@@ -115,40 +115,41 @@ py -m esptool --chip esp32 write_flash -z 0x1000 esp32-idf3-20210202-v1.14.bin
 ampy –-port COM8 put lib
 ampy –-port COM8 put main.py
 
- 
+<p  
 I.	Erase ATOM Lite
 a.	Install M5Burner software
 b.	Connect ATOM Lite device to PC
 c.	Find which COM port is used by device
 d.	Select COM port and ‘Erase’
   
- 
+<p  
 II.	Burn ATOM Lite
 a.	Reset ATOM Lite device
 b.	Select COM port, ATOM device, UIFLOW(LITE) > ‘Burn’
  
- 
+<p  
 c.	Reset ATOM Lite device
-
+<p 
 III.	Download & Install Libraries
 a.	Install uPyLoader
 b.	Download Libraries cooperative_multitasking.py, lora_states.py and asr6501.py
 c.	Connect uPyLoader to COM port > Select files > Transfer files
  
-
-IV.	Update & Download main.py 
+<p 
+IV.	Update & Download main.py
+   <p 
 a.	Replace DevEUI, JoinEUI and AppKey with new end device Activation Information
- 
+<p 
 b.	Transfer main.py
 c.	Restart device
-
+<p 
 5.	Main.py Code
-
+<p 
 from cooperative_multitasking import Tasks
 from machine import UART
 from lora_states import NOT_JOINED, JOINING, JOINED, SENDING, SENT, RETRY
 from asr6501 import ASR6501
-
+<p 
 tasks = Tasks()
 uart2 = UART(2, tx=26, rx=32)
 uart2.init(baudrate=115200, bits=8, parity=None, stop=1, txbuf=256, rxbuf=256)
@@ -235,7 +236,7 @@ tasks.now(start_join)
 while tasks.available():
     tasks.run()
     
-
+<p 
 6.	Results
 
 
